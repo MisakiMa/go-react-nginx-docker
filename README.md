@@ -1,4 +1,4 @@
-React + Golang + Echo + PostgressSQL + docker-compose + Nginx の自分用テスト
+React + Golang + Echo + PostgressSQL + docker-compose + Nginx の自分用プレイグラウンド
 
 参考サイト
 
