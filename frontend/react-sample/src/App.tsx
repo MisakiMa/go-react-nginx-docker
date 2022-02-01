@@ -10,12 +10,19 @@ type User = {
 
 function App() {
   const [users, setUsers] = useState<User[]>([])
+  const [name, setName] = useState<string>('')
+  const [id, setId] = useState<number>(2)
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/users').then(res => {
       setUsers(res.data)
     })
   }, [])
+
+  const handleSubmit = () => {
+    setId((i) => i + 1)
+    axios.post('http://localhost:5000/api/users', {name: name, id: id})
+  }
 
   return (
     <div className="App">
@@ -32,9 +39,11 @@ function App() {
         >
           Learn React
         </a>
-        <p>
-          id: {users[0]?.Id} name: {users[0]?.Name}
-        </p>
+        {users.map((user) => {
+          return <p>id: {user.Id} name: {user.Name}</p>
+        })}
+        <input type="text" value={name} onChange={(event) => setName(event.target.value)}></input>
+        <button onClick={handleSubmit}>Submit</button>
       </header>
     </div>
   );
