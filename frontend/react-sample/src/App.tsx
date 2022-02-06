@@ -5,23 +5,33 @@ import axios from 'axios';
 
 type User = {
   Name: string;
-  Id: Number;
+  Id: number;
+  Password: string;
 }
 
 function App() {
   const [users, setUsers] = useState<User[]>([])
   const [name, setName] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
   const [id, setId] = useState<number>(2)
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/users').then(res => {
       setUsers(res.data)
+      let users: User[] = res.data
+      let user = users[users.length - 1]
+      setId(user.Id)
     })
   }, [])
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    await axios.post('http://localhost:5000/api/users/signup', {name: name, id: id + 1, password: password})
+    await axios.get('http://localhost:5000/api/users').then(res => {
+      setUsers(res.data)
+    })
+    setName('')
+    setPassword('')
     setId((i) => i + 1)
-    axios.post('http://localhost:5000/api/users', {name: name, id: id})
   }
 
   return (
@@ -40,9 +50,10 @@ function App() {
           Learn React
         </a>
         {users.map((user) => {
-          return <p>id: {user.Id} name: {user.Name}</p>
+          return <p key={user.Id}>id: {user.Id} name: {user.Name}</p>
         })}
         <input type="text" value={name} onChange={(event) => setName(event.target.value)}></input>
+        <input type="password" value={password} onChange={(event) => setPassword(event.target.value)}></input>
         <button onClick={handleSubmit}>Submit</button>
       </header>
     </div>
