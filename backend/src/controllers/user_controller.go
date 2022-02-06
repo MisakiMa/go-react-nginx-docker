@@ -39,6 +39,21 @@ func (pc UserController) Create(c echo.Context) error {
 	}
 }
 
+// POST /users/signup
+func (pc UserController) Signup(c echo.Context) error {
+	var u repository.UserRepository
+	p, err := u.CreateModel(c)
+
+	if err != nil {
+		var apierr APIError
+		apierr.Code = 400
+		apierr.Message = err.Error()
+		return c.JSON(http.StatusBadRequest, apierr)
+	} else {
+		return c.JSON(201, p)
+	}
+}
+
 // Get /users/:id
 func (pc UserController) Show(c echo.Context) error {
 	id := c.Param("id")

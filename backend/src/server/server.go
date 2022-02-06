@@ -2,6 +2,7 @@ package server
 
 import (
 	"air-server/controllers"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
@@ -9,6 +10,10 @@ import (
 func Init() {
 	e := router()
 	e.Logger.Fatal(e.Start(":8080"))
+}
+
+func test(c echo.Context) error {
+	return c.String(http.StatusOK, "Test!")
 }
 
 func router() *echo.Echo {
@@ -20,6 +25,7 @@ func router() *echo.Echo {
 	e.GET("/users/:id", userCtrl.Show)
 	e.PUT("/users/:id", userCtrl.Update)
 	e.DELETE("/users/:id", userCtrl.Delete)
+	e.POST("/users/signup", userCtrl.Signup)
 
 	postCtrl := controllers.PostController{}
 	e.GET("/posts", postCtrl.Index)
@@ -27,6 +33,8 @@ func router() *echo.Echo {
 	e.GET("/posts/:id", postCtrl.Show)
 	e.PUT("/posts/:id", postCtrl.Update)
 	e.DELETE("/posts/:id", postCtrl.Delete)
+
+	e.GET("/test", test)
 
 	return e
 }

@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"air-server/crypto"
 	"air-server/db"
 	"air-server/models"
 
@@ -31,8 +32,13 @@ func (_ UserRepository) CreateModel(c echo.Context) (User, error) {
 	db := db.GetDB()
 	var u User
 	if err := c.Bind(&u); err != nil {
-		return u, err
+		return User{}, err
 	}
+	hash, err := crypto.PasswordEncrypt(u.Password)
+	if err != nil {
+		return User{}, err
+	}
+	u.Password = hash
 	if err := db.Create(&u).Error; err != nil {
 		return u, err
 	}
