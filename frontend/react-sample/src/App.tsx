@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
+import { Link, Route, Routes } from 'react-router-dom';
+import LoginPage from './pages/login';
 
 type User = {
   Name: string;
@@ -9,7 +11,9 @@ type User = {
   Password: string;
 }
 
-function App() {
+
+function UsersList() {
+
   const [users, setUsers] = useState<User[]>([])
   const [name, setName] = useState<string>('')
   const [password, setPassword] = useState<string>('')
@@ -36,6 +40,9 @@ function App() {
 
   return (
     <div className="App">
+      <nav>
+        <Link to="login">Login</Link>
+      </nav>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
@@ -58,6 +65,27 @@ function App() {
       </header>
     </div>
   );
+
+}
+
+function App() {
+  return (
+    <div className="App">
+      <h1>React Router!</h1>
+      <Routes>
+        <Route path="/" element={<UsersList/>}/>
+        <Route  path="login" element={<LoginPage/>}/>
+        <Route
+          path="*"
+          element={
+            <main style={{ padding: "1rem"}}>
+              <p>There's noting here!</p>
+            </main>
+          }
+        />
+      </Routes>
+    </div>
+  )
 }
 
 export default App;
