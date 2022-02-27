@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
 import { Link, Route, Routes } from 'react-router-dom';
+import logo from './logo.svg';
 import LoginPage from './pages/login';
 
 type User = {
@@ -11,7 +11,6 @@ type User = {
   Password: string;
 }
 
-
 function UsersList() {
 
   const [users, setUsers] = useState<User[]>([])
@@ -19,18 +18,20 @@ function UsersList() {
   const [password, setPassword] = useState<string>('')
   const [id, setId] = useState<number>(2)
 
-  useEffect(() => {
-    axios.get('http://localhost:5000/api/users').then(res => {
-      setUsers(res.data)
-      let users: User[] = res.data
-      let user = users[users.length - 1]
+  useEffect(() =>  {
+    const getUsers = async () => {
+      const res = await axios.get<User[]>('http://localhost:5000/api/users')
+      setUsers(res.data);
+      const usersData = res.data;
+      const user = usersData[usersData.length - 1]
       setId(user.Id)
-    })
+    }
+    void getUsers()
   }, [])
 
   const handleSubmit = async () => {
-    await axios.post('http://localhost:5000/api/users/signup', {name: name, id: id + 1, password: password})
-    await axios.get('http://localhost:5000/api/users').then(res => {
+    await axios.post('http://localhost:5000/api/users/signup', {name, id: id + 1, password})
+    await axios.get<User[]>('http://localhost:5000/api/users').then(res => {
       setUsers(res.data)
     })
     setName('')
@@ -56,12 +57,10 @@ function UsersList() {
         >
           Learn React
         </a>
-        {users.map((user) => {
-          return <p key={user.Id}>id: {user.Id} name: {user.Name}</p>
-        })}
-        <input type="text" value={name} onChange={(event) => setName(event.target.value)}></input>
-        <input type="password" value={password} onChange={(event) => setPassword(event.target.value)}></input>
-        <button onClick={handleSubmit}>Submit</button>
+        {users.map((user) => <p key={user.Id}>id: {user.Id} name: {user.Name}</p>)}
+        <input type="text" value={name} onChange={(event) => setName(event.target.value)} />
+        <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+        <button type="button" onClick={handleSubmit}>Submit</button>
       </header>
     </div>
   );
@@ -79,7 +78,7 @@ function App() {
           path="*"
           element={
             <main style={{ padding: "1rem"}}>
-              <p>There's noting here!</p>
+              <p>There&apos;s noting here!</p>
             </main>
           }
         />
