@@ -3,12 +3,12 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 function LoginPage() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 	const [name, setName] = useState<string>('')
 	const [password, setPassword] = useState<string>('')
   const [id, setId] = useState<number>(2)
   const handleSubmit = async () => {
-    await axios.post('http://localhost:5000/api/users/signup', {name: name, id: id + 1, password: password})
+    await axios.post('http://localhost:5000/api/users/signup', {name, id: id + 1, password})
     setName('')
     setPassword('')
     setId((i) => i + 1)
@@ -19,12 +19,12 @@ function LoginPage() {
         <Link to="/">Home</Link>
       </nav>
       <main>
-        <input type="text" value={name} onChange={(event) => setName(event.target.value)}></input>
-        <input type="password" value={password} onChange={(event) => setPassword(event.target.value)}></input>
+        <input type="text" value={name} onChange={(event) => setName(event.target.value)} />
+        <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
         <div>
-          <button onClick={handleSubmit}>Submit</button>
+          <button type="button" onClick={handleSubmit}>Submit</button>
         </div>
-        <button onClick={() => {
+        <button type="button" onClick={() => {
           navigate("/")
         }}>ボタン Homeへ</button>
       </main>
