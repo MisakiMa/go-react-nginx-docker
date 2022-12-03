@@ -8,7 +8,7 @@ function LoginPage() {
 	const [password, setPassword] = useState<string>('')
   const [id, setId] = useState<number>(2)
   const handleSubmit = async () => {
-    await axios.post('http://localhost:5000/api/users/signup', {name, id: id + 1, password})
+    await axios.post('http://localhost:8000/api/users/signup', {name, id: id + 1, password})
     setName('')
     setPassword('')
     setId((i) => i + 1)

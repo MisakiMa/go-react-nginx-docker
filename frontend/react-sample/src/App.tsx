@@ -20,7 +20,7 @@ function UsersList() {
 
   useEffect(() =>  {
     const getUsers = async () => {
-      const res = await axios.get<User[]>('http://localhost:5000/api/users')
+      const res = await axios.get<User[]>('http://localhost:8000/api/users')
       setUsers(res.data);
       const usersData = res.data;
       const user = usersData[usersData.length - 1]
@@ -30,8 +30,8 @@ function UsersList() {
   }, [])
 
   const handleSubmit = async () => {
-    await axios.post('http://localhost:5000/api/users/signup', {name, id: id + 1, password})
-    await axios.get<User[]>('http://localhost:5000/api/users').then(res => {
+    await axios.post('http://localhost:8000/api/users/signup', {name, id: id + 1, password})
+    await axios.get<User[]>('http://localhost:8000/api/users').then(res => {
       setUsers(res.data)
     })
     setName('')
