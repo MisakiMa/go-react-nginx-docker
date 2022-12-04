@@ -18,6 +18,11 @@ func Init() {
 		panic(err)
 	}
 	autoMigration()
+
+	// 仮ユーザーを追加する
+	if err := db.Where("id = ?", 1).Error; err == nil {
+		return
+	}
 	user := models.User{
 		ID:    1,
 		Name:  "aoki",
