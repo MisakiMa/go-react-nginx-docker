@@ -92,8 +92,7 @@ func (pc UserController) Update(c echo.Context) error {
 func (pc UserController) Delete(c echo.Context) error {
 	id := c.Param("id")
 	var u repository.UserRepository
-	idInt, _ := strconv.Atoi(id)
-	if err := u.DeleteByID(idInt); err != nil {
+	if err := u.DeleteByID(id); err != nil {
 		var apierr APIError
 		apierr.Code = 403
 		apierr.Message = err.Error()

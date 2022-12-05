@@ -13,22 +13,23 @@ type UserRepository struct{}
 type User models.User
 
 type UserProfile struct {
-	Name string
-	Id   int
+	UserName string `json:"userName"`
+	UserID   string `json:"userId"`
+	ID       int    `json:"id"`
 }
 
 // get all User
-func (_ UserRepository) GetAll() ([]UserProfile, error) {
+func (UserRepository) GetAll() ([]UserProfile, error) {
 	db := db.GetDB()
 	var u []UserProfile
-	if err := db.Table("users").Select("name, id").Scan(&u).Error; err != nil {
+	if err := db.Table("users").Select("user_name, user_id, id").Scan(&u).Error; err != nil {
 		return nil, err
 	}
 	return u, nil
 }
 
 // create User model
-func (_ UserRepository) CreateModel(c echo.Context) (User, error) {
+func (UserRepository) CreateModel(c echo.Context) (User, error) {
 	db := db.GetDB()
 	var u User
 	if err := c.Bind(&u); err != nil {
@@ -39,6 +40,7 @@ func (_ UserRepository) CreateModel(c echo.Context) (User, error) {
 		return User{}, err
 	}
 	u.Password = hash
+	// u.ID = uuid.NewString()
 	if err := db.Create(&u).Error; err != nil {
 		return u, err
 	}
@@ -46,7 +48,7 @@ func (_ UserRepository) CreateModel(c echo.Context) (User, error) {
 }
 
 // get a User by ID
-func (_ UserRepository) GetByID(id int) (models.User, error) {
+func (UserRepository) GetByID(id int) (models.User, error) {
 	db := db.GetDB()
 	var me models.User
 	if err := db.Where("id = ?", id).First(&me).Error; err != nil {
@@ -61,7 +63,7 @@ func (_ UserRepository) GetByID(id int) (models.User, error) {
 }
 
 // update a User
-func (_ UserRepository) UpdateByID(id int, c echo.Context) (models.User, error) {
+func (UserRepository) UpdateByID(id int, c echo.Context) (models.User, error) {
 	db := db.GetDB()
 	var u models.User
 	if err := db.Where("id = ?", id).First(&u).Error; err != nil {
@@ -70,14 +72,14 @@ func (_ UserRepository) UpdateByID(id int, c echo.Context) (models.User, error) 
 	if err := c.Bind(&u); err != nil {
 		return u, err
 	}
-	u.ID = uint(id)
+	u.ID = id
 	db.Save(&u)
 
 	return u, nil
 }
 
 // delete a User by ID
-func (_ UserRepository) DeleteByID(id int) error {
+func (UserRepository) DeleteByID(id string) error {
 	db := db.GetDB()
 	var u User
 

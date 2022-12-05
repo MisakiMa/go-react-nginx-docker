@@ -14,7 +14,7 @@ type PostRepository struct{}
 type Post api.Post
 
 // get all Post
-func (_ PostRepository) GetAll() ([]Post, error) {
+func (PostRepository) GetAll() ([]Post, error) {
 	db := db.GetDB()
 	var p []Post
 
@@ -26,7 +26,7 @@ func (_ PostRepository) GetAll() ([]Post, error) {
 }
 
 // create Post model
-func (_ PostRepository) CreateModel(p *models.Post) (*models.Post, error) {
+func (PostRepository) CreateModel(p *models.Post) (*models.Post, error) {
 	db := db.GetDB()
 	if err := db.Create(&p).Error; err != nil {
 		return p, err
@@ -35,7 +35,7 @@ func (_ PostRepository) CreateModel(p *models.Post) (*models.Post, error) {
 }
 
 // get a Post by ID
-func (_ PostRepository) GetByID(id int) (models.Post, error) {
+func (PostRepository) GetByID(id int) (models.Post, error) {
 	db := db.GetDB()
 	var p models.Post
 	if err := db.Where("id = ?", id).First(&p).Error; err != nil {
@@ -45,7 +45,7 @@ func (_ PostRepository) GetByID(id int) (models.Post, error) {
 }
 
 // update a Post
-func (_ PostRepository) UpdateByID(id int, c echo.Context) (api.Post, error) {
+func (PostRepository) UpdateByID(id int, c echo.Context) (api.Post, error) {
 	db := db.GetDB()
 	var p api.Post
 	if err := db.Where("id = ?", id).First(&p).Error; err != nil {
@@ -64,7 +64,7 @@ func (_ PostRepository) UpdateByID(id int, c echo.Context) (api.Post, error) {
 }
 
 // delete a Post by ID
-func (_ PostRepository) DeleteByID(id int) error {
+func (PostRepository) DeleteByID(id int) error {
 	db := db.GetDB()
 	var p Post
 

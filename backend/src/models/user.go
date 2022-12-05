@@ -1,8 +1,9 @@
 package models
 
 type User struct {
-	ID       uint   `json:"id" binding:"required"`
-	Name     string `json:"name" binding:"required"`
+	ID       int    `json:"id" gorm:"AUTO_INCREMENT"`
+	UserID   string `json:"userId" binding:"required"`
+	UserName string `json:"userName" binding:"required"`
 	Password string `json:"password" binding:"required"`
 	Posts    []Post `json:"posts"`
 }

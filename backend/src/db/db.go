@@ -20,13 +20,14 @@ func Init() {
 	autoMigration()
 
 	// 仮ユーザーを追加する
-	if err := db.Where("id = ?", 1).Error; err == nil {
+	var u []models.User
+	if err := db.Table("users").Select("user_name, id").Scan(&u).Error; err == nil || len(u) > 0 {
 		return
 	}
 	user := models.User{
-		ID:    1,
-		Name:  "aoki",
-		Posts: []models.Post{{ID: 1, Content: "comment1"}, {ID: 2, Content: "comment2"}},
+		UserID:   "12345",
+		UserName: "aoki",
+		Posts:    []models.Post{{ID: 1, Content: "comment1"}, {ID: 2, Content: "comment2"}},
 	}
 	db.Create(&user)
 }
