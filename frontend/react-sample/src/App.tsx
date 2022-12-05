@@ -6,37 +6,47 @@ import logo from './logo.svg';
 import LoginPage from './pages/login';
 
 type User = {
-  Name: string;
-  Id: number;
-  Password: string;
+  userName: string;
+  userId: string;
+  id: string;
+  password: string;
 }
 
 function UsersList() {
 
   const [users, setUsers] = useState<User[]>([])
-  const [name, setName] = useState<string>('')
+  const [userName, setName] = useState<string>('')
+  const [userId, setUserId] = useState<string>('')
   const [password, setPassword] = useState<string>('')
-  const [id, setId] = useState<number>(2)
 
   useEffect(() =>  {
     const getUsers = async () => {
       const res = await axios.get<User[]>('http://localhost:8000/api/users')
       setUsers(res.data);
+      console.log(res.data);
       const usersData = res.data;
       const user = usersData[usersData.length - 1]
-      setId(user.Id)
     }
     void getUsers()
   }, [])
 
+  const resetForm = () => {
+    setName('')
+    setUserId('')
+    setPassword('')
+  }
+
   const handleSubmit = async () => {
-    await axios.post('http://localhost:8000/api/users/signup', {name, id: id + 1, password})
-    await axios.get<User[]>('http://localhost:8000/api/users').then(res => {
+    const requestdata = {
+      "userName" : userName,
+      "userId" : userId,
+      password
+    };
+    await axios.post('http://localhost:8000/api/users/signup', requestdata)
+    await axios.get('http://localhost:8000/api/users').then(res => {
       setUsers(res.data)
     })
-    setName('')
-    setPassword('')
-    setId((i) => i + 1)
+    resetForm();
   }
 
   return (
@@ -57,9 +67,10 @@ function UsersList() {
         >
           Learn React
         </a>
-        {users.map((user) => <p key={user.Id}>id: {user.Id} name: {user.Name}</p>)}
-        <input type="text" value={name} onChange={(event) => setName(event.target.value)} />
-        <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+        {users.map((user) => <p key={user.id}>id: {user.id} name: {user.userName} userId: {user.userId}</p>)}
+        UserID <input type="text" value={userId} onChange={(event) => setUserId(event.target.value)} />
+        UserName <input type="text" value={userName} onChange={(event) => setName(event.target.value)} />
+        Password <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
         <button type="button" onClick={handleSubmit}>Submit</button>
       </header>
     </div>
