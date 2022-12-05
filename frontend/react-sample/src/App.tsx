@@ -23,9 +23,6 @@ function UsersList() {
     const getUsers = async () => {
       const res = await axios.get<User[]>('http://localhost:8000/api/users')
       setUsers(res.data);
-      console.log(res.data);
-      const usersData = res.data;
-      const user = usersData[usersData.length - 1]
     }
     void getUsers()
   }, [])
@@ -43,7 +40,7 @@ function UsersList() {
       password
     };
     await axios.post('http://localhost:8000/api/users/signup', requestdata)
-    await axios.get('http://localhost:8000/api/users').then(res => {
+    await axios.get<User[]>('http://localhost:8000/api/users').then(res => {
       setUsers(res.data)
     })
     resetForm();
