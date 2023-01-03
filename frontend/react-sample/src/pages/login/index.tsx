@@ -1,17 +1,22 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import toast, { Toaster } from 'react-hot-toast';
+import { User } from "../../type/user";
 
 function LoginPage() {
   const navigate = useNavigate();
-	const [name, setName] = useState<string>('')
 	const [password, setPassword] = useState<string>('')
-  const [id, setId] = useState<number>(2)
-  const handleSubmit = async () => {
-    await axios.post('http://localhost:8000/api/users/signup', {name, id: id + 1, password})
-    setName('')
-    setPassword('')
-    setId((i) => i + 1)
+  const [id, setId] = useState<number>(0)
+  const [isLogin, setIsLogin] = useState<boolean>(false)
+  const signinClick = async () => {
+    try {
+      const result = await axios.post<User>('http://localhost:8000/api/users/signin', {id, password})
+      const user = result.data
+      setIsLogin(true)
+    } catch {
+      toast('errorが起きました!!')
+    }
   }
 	return (
     <>
@@ -19,10 +24,12 @@ function LoginPage() {
         <Link to="/">Home</Link>
       </nav>
       <main>
-        <input type="text" value={name} onChange={(event) => setName(event.target.value)} />
-        <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+        <Toaster />
+        {isLogin && <h2>ログインしました!!!!!!</h2>}
+        id<input type="number" value={id} onChange={(event) => setId(event.target.valueAsNumber)} />
+        password<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
         <div>
-          <button type="button" onClick={handleSubmit}>Submit</button>
+          <button type="button" onClick={signinClick}>signin</button>
         </div>
         <button type="button" onClick={() => {
           navigate("/")

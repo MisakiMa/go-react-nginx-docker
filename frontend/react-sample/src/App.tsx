@@ -4,13 +4,8 @@ import axios from 'axios';
 import { Link, Route, Routes } from 'react-router-dom';
 import logo from './logo.svg';
 import LoginPage from './pages/login';
+import { User } from './type/user';
 
-type User = {
-  userName: string;
-  userId: string;
-  id: string;
-  password: string;
-}
 
 function UsersList() {
 
