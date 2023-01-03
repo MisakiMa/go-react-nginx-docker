@@ -1,8 +1,7 @@
 package api
 
 type User struct {
-	ID       string `json:"id" binding:"required"`
-	UserName string `json:"userName" binding:"required"`
+	ID       int    `json:"id" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 

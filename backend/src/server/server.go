@@ -26,6 +26,7 @@ func router() *echo.Echo {
 	e.PUT("/users/:id", userCtrl.Update)
 	e.DELETE("/users/:id", userCtrl.Delete)
 	e.POST("/users/signup", userCtrl.Signup)
+	e.POST("/users/signin", userCtrl.Signin)
 
 	postCtrl := controllers.PostController{}
 	e.GET("/posts", postCtrl.Index)

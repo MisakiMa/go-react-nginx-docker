@@ -4,6 +4,7 @@ import (
 	"air-server/crypto"
 	"air-server/db"
 	"air-server/models"
+	"fmt"
 
 	"github.com/labstack/echo/v4"
 )
@@ -45,6 +46,24 @@ func (UserRepository) CreateModel(c echo.Context) (User, error) {
 		return u, err
 	}
 	return u, nil
+}
+
+func (UserRepository) SigninByIdAndPassword(id int, password string, e echo.Context) (models.User, error) {
+	db := db.GetDB()
+	fmt.Println("run signin %d %s", id, password)
+	fmt.Println(id)
+	fmt.Println(password)
+	var me models.User
+	if err := db.Table("users").Where("id = ?", id).First(&me).Error; err != nil {
+		fmt.Println("not found user")
+		return models.User{}, err
+	}
+	if err := crypto.CompareHashAndPassword(me.Password, password); err != nil {
+		fmt.Println("not true compare hash and passowrd")
+		return models.User{}, err
+	}
+
+	return me, nil
 }
 
 // get a User by ID

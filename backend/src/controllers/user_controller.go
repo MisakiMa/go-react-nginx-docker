@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"air-server/form/api"
 	"air-server/models/repository"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -51,6 +53,30 @@ func (pc UserController) Signup(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, apierr)
 	} else {
 		return c.JSON(201, p)
+	}
+}
+
+// POST /users/signin
+func (pc UserController) Signin(c echo.Context) error {
+	var u repository.UserRepository
+	var user api.User
+	// paramはget用だからpostはbindを使わないといけない
+	if err := c.Bind(&user); err != nil {
+		var apierr APIError
+		apierr.Code = 400
+		apierr.Message = err.Error()
+		fmt.Println("run signin %v", c)
+
+		return c.JSON(http.StatusBadRequest, apierr)
+	}
+	// idInt, _ := strconv.Atoi(user.ID)
+	if user, err := u.SigninByIdAndPassword(user.ID, user.Password, c); err != nil {
+		var apierr APIError
+		apierr.Code = 400
+		apierr.Message = err.Error()
+		return c.JSON(http.StatusBadRequest, apierr)
+	} else {
+		return c.JSON(201, user)
 	}
 }
 
